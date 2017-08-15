@@ -1,0 +1,11 @@
+/packages
+
+# User-specific files
+*.suo
+*.user
+
+# Visual Studio cache/options directory
+.vs/
+
+# Log files
+*.log
