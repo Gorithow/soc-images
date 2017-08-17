@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SocImages.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System;
+using SocImages.Models;
 
 namespace SocImages
 {
@@ -20,6 +21,7 @@ namespace SocImages
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
@@ -30,6 +32,41 @@ namespace SocImages
         {
             // Add framework services.
             services.AddMvc();
+
+            var connection = @"User ID=socimages;Password=zaq1@WSX;Host=localhost;Port=5432;Database=socimages;Pooling=true;";
+
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(connection)
+            );
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = false;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(150);
+                options.LoginPath = "/Account/LogIn";
+                options.LogoutPath = "/Account/LogOff";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +86,8 @@ namespace SocImages
             }
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
