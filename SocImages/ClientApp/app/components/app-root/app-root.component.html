@@ -1,6 +1,31 @@
-﻿<button (click)="register($event)">Register!</button>
-<button (click)="login($event)">Login!</button>
-<button (click)="image($event)">Image!</button>
-
-<input #fileInput type="file" />
-<button (click)="addFile()">Add</button>
+﻿<img [src]="logoUrl" height="100" />
+<md-tab-group md-stretch-tabs>
+    <md-tab label="Main">
+        <p></p>
+        <md-select [(ngModel)]="selectedSort" placeholder="Sort By">
+            <md-option *ngFor="let option of sortOptions" [value]="option.value">
+                {{ option.label }}
+            </md-option>
+        </md-select>
+        <md-paginator [length]="100"
+                      [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
+        </md-paginator>
+    </md-tab>
+    <md-tab label="Random">
+        <button>Random</button>
+    </md-tab>
+    <md-tab label="Upload">
+        <input #fileInput type="file" />
+        <button (click)="addFile()">Upload</button>
+    </md-tab>
+    <md-tab label="Register">
+        <button (click)="register($event)">Register</button>
+    </md-tab>
+    <md-tab label="Login">
+        <button (click)="login($event)">Login</button>
+    </md-tab>
+    <md-tab label="Logout">
+        <button>Logout</button>
+    </md-tab>
+</md-tab-group>

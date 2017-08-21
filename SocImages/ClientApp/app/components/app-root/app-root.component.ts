@@ -8,8 +8,14 @@ import { Http, RequestOptionsArgs } from '@angular/http';
 })
 
 export class AppRootComponent {
-    count: number = 0;
-    message: string = "Hello World!";
+    private logged: boolean = false;
+    private readonly logoUrl: string = "/logo.svg";
+
+    private selectedSort = SortBy.UploadDate;
+    private readonly sortOptions: Array<{ label: string, value: SortBy }> = [
+        { label: "Upload Date", value: SortBy.UploadDate },
+        { label: "Rate", value: SortBy.Rate }
+    ]
 
     @ViewChild("fileInput") fileInput: ElementRef;
 
@@ -44,14 +50,6 @@ export class AppRootComponent {
         }).subscribe(response => alert(response));
     }
 
-    image(): void {
-        this.http.get('/images/getimage', {
-            'params': {
-                'id': 1
-            }
-        }).subscribe(response => console.log(response));
-    }
-
     upload(fileToUpload: any) {
         let input = new FormData();
         input.append("imageFile", fileToUpload);
@@ -59,4 +57,10 @@ export class AppRootComponent {
         return this.http
             .post("/images/postimage", input);
     }
+}
+
+enum SortBy
+{
+    UploadDate,
+    Rate
 }
