@@ -1,3 +1,6 @@
-﻿<p>Message : {{message}}</p>
-<button (click)="clicked($event)">Click me!</button>
-{{count}}
+﻿<button (click)="register($event)">Register!</button>
+<button (click)="login($event)">Login!</button>
+<button (click)="image($event)">Image!</button>
+
+<input #fileInput type="file" />
+<button (click)="addFile()">Add</button>
