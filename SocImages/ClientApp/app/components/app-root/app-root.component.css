@@ -1,0 +1,8 @@
+﻿.mat-tab-links {
+    display: table;
+    width: 100%;
+}
+
+.mat-tab-links .mat-tab-link {
+    display: table-cell;
+}
