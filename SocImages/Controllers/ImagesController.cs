@@ -38,6 +38,33 @@ namespace SocImages.Controllers
             return File(image.ImageData, _imageContentType);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetImagesCount()
+        {
+            int imagesCount = await _context.Images.CountAsync();
+
+            return Ok(imagesCount);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetByUploadDate(int skip, int take)
+        {
+            var imagesByUploadDate = _context.Images.OrderByDescending(i => i.CreatedDate);
+
+            return GetImages(imagesByUploadDate, skip, take);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetByRate(int skip, int take)
+        {
+            var imagesByRateDate = _context.Images.OrderByDescending(i => i.CreatedDate);
+
+            return GetImages(imagesByRateDate, skip, take);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> PostImage(IFormFile imageFile)
@@ -55,7 +82,7 @@ namespace SocImages.Controllers
                         OwnerId = this.User.GetUserId()
                     };
 
-                    _context.Add<Image>(newImage);
+                    _context.Add(newImage);
 
                     await _context.SaveChangesAsync();
 
@@ -78,6 +105,13 @@ namespace SocImages.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        private IActionResult GetImages(IQueryable<Image> imageQuery, int skip, int take)
+        {
+            var images = imageQuery.Skip(skip).Take(take);
+
+            return Ok(images);
         }
     }
 }

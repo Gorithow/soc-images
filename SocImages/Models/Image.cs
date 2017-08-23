@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -25,12 +26,15 @@ namespace SocImages.Models
 
         [Required]
         [DataType(DataType.Upload)]
+        [JsonIgnore]
         public byte[] ImageData { get; set; }
 
         [Required]
+        [JsonIgnore]
         public string OwnerId { get; set; }
 
         [ForeignKey("OwnerId")]
+        [JsonIgnore]
         public ApplicationUser Owner { get; set; }
 
         [DefaultValue(0)]

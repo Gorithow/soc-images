@@ -7,8 +7,9 @@ import { ServerModule } from "@angular/platform-server";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpModule } from "@angular/http";
-import { MdPaginatorModule, MdTabsModule, MdSelectModule } from "@angular/material";
+import { MdPaginatorModule, MdTabsModule, MdSelectModule, MdCardModule, MdButtonModule } from "@angular/material";
 import { RouterModule, Routes } from "@angular/router";
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppRootComponent } from "./components/app-root/app-root.component";
 import { MainComponent } from "./components/main/main.component";
@@ -18,6 +19,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { LogoutComponent } from "./components/logout/logout.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
+import { ImageComponent } from "./components/image/image.component";
 
 const appRoutes: Routes = [
     { path: "", pathMatch: "full", component: MainComponent },
@@ -34,6 +36,7 @@ const appRoutes: Routes = [
     bootstrap: [AppRootComponent],
     declarations: [
         AppRootComponent,
+        ImageComponent,
         LoginComponent,
         LogoutComponent,
         MainComponent,
@@ -45,12 +48,15 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
+        HttpClientModule,
         HttpModule,
+        MdButtonModule,
+        MdCardModule,
         MdPaginatorModule,
         MdSelectModule,
         MdTabsModule,
         NoopAnimationsModule,
-        RouterModule.forRoot(appRoutes, { enableTracing: true })
+        RouterModule.forRoot(appRoutes)
     ]
 })
 

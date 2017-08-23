@@ -12,7 +12,7 @@ export class AppRootComponent {
 
     private readonly navLinks: Array<NavLink> = [
         { path: "", label: "Main" },
-        { path: "rand", label: "Rand" },
+        { path: "random", label: "Random" },
         { path: "upload", label: "Upload" },
         { path: "register", label: "Register" },
         { path: "login", label: "Login" }
