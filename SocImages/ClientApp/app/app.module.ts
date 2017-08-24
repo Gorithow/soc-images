@@ -2,12 +2,18 @@
 import "reflect-metadata";
 
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import { ServerModule } from "@angular/platform-server";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { HttpModule } from "@angular/http";
-import { MdPaginatorModule, MdTabsModule, MdSelectModule, MdCardModule, MdButtonModule } from "@angular/material";
+import {
+    MdPaginatorModule,
+    MdTabsModule,
+    MdSelectModule,
+    MdCardModule,
+    MdButtonModule,
+    MdInputModule } from "@angular/material";
 import { RouterModule, Routes } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 
@@ -20,11 +26,12 @@ import { RegisterComponent } from "./components/register/register.component";
 import { LogoutComponent } from "./components/logout/logout.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { ImageComponent } from "./components/image/image.component";
+import { AuthService, AuthGuard } from "./auth.service";
 
 const appRoutes: Routes = [
     { path: "", pathMatch: "full", component: MainComponent },
     { path: "random", component: RandomComponent },
-    { path: "upload", component: UploadComponent },
+    { path: "upload", component: UploadComponent, canActivate: [AuthGuard] },
     { path: "login", component: LoginComponent },
     { path: "register", component: RegisterComponent },
     { path: "logout", component: LogoutComponent },
@@ -47,16 +54,21 @@ const appRoutes: Routes = [
     ],
     imports: [
         BrowserModule,
-        FormsModule,
         HttpClientModule,
         HttpModule,
         MdButtonModule,
         MdCardModule,
+        MdInputModule,
         MdPaginatorModule,
         MdSelectModule,
         MdTabsModule,
         NoopAnimationsModule,
+        ReactiveFormsModule,
         RouterModule.forRoot(appRoutes)
+    ],
+    providers: [
+        AuthService,
+        AuthGuard
     ]
 })
 

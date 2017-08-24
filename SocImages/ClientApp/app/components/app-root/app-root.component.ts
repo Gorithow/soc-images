@@ -1,4 +1,5 @@
-﻿import { Component, ViewEncapsulation } from "@angular/core"
+﻿import { Component, ViewEncapsulation, OnInit } from "@angular/core"
+import { AuthService } from "../../auth.service";
 
 @Component({
     selector: "app-root",
@@ -7,16 +8,43 @@
     encapsulation: ViewEncapsulation.None
 })
 
-export class AppRootComponent {
+export class AppRootComponent implements OnInit {
     private readonly logoUrl: string = "/logo.svg";
 
-    private readonly navLinks: Array<NavLink> = [
+    private navLinks: Array<NavLink> = [];
+
+    private readonly navLinksEveryone: Array<NavLink> = [
         { path: "", label: "Main" },
-        { path: "random", label: "Random" },
+        { path: "random", label: "Random" }
+    ]
+
+    private readonly navLinksLogged: Array<NavLink> = [
         { path: "upload", label: "Upload" },
+        { path: "logout", label: "Logout" }
+    ]
+
+    private readonly navLinksNotLogged: Array<NavLink> = [
         { path: "register", label: "Register" },
         { path: "login", label: "Login" }
     ]
+
+    private get isLoggedIn(): boolean {
+        return this.authService.isLoggedIn;
+    }
+
+    private updateNavLinks(): void {
+        this.navLinks = this.navLinksEveryone.concat(this.isLoggedIn ? this.navLinksLogged : this.navLinksNotLogged);
+    }
+
+    constructor(private authService: AuthService) {
+    }
+
+    ngOnInit(): void {
+        this.updateNavLinks();
+
+        this.authService.logSuccessed.subscribe(() => this.updateNavLinks());
+    }
+
 }
 
 interface NavLink

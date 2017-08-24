@@ -1,0 +1,9 @@
+﻿.login-form {
+    margin: auto;
+    text-align: center;
+    margin-top: 5px;
+}
+
+md-error {
+    margin-bottom: 4px;
+}

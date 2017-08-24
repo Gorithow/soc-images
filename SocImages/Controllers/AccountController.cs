@@ -45,14 +45,14 @@ namespace SocImages.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(string email, string password)
+        public async Task<IActionResult> Register(string userName, string password)
         {
-            if (email == null || password == null)
+            if (userName == null || password == null)
             {
                 return BadRequest();
             }
 
-            var user = new ApplicationUser { UserName = email, Email = email };
+            var user = new ApplicationUser { UserName = userName };
 
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
@@ -66,16 +66,16 @@ namespace SocImages.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string login, string password, string returnUrl = null)
+        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
         {
-            if (login == null || password == null)
+            if (userName == null || password == null)
             {
                 return BadRequest();
             }
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(login, password, true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(userName, password, true, lockoutOnFailure: false);
             if (result.Succeeded)
             {
                 _logger.LogInformation(1, "User logged in.");
