@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SocImages.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using SocImages.Data;
 using SocImages.Models;
 
 namespace SocImages
@@ -30,8 +33,11 @@ namespace SocImages
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc();
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
 
             var connection = @"User ID=socimages;Password=zaq1@WSX;Host=localhost;Port=5432;Database=socimages;Pooling=true;";
 
@@ -70,7 +76,11 @@ namespace SocImages
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            ILoggerFactory loggerFactory,
+            IAntiforgery antiforgery)
         {
             if (env.IsDevelopment())
             {
@@ -88,6 +98,13 @@ namespace SocImages
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
+            app.Use(next => context =>
+            {
+                    var tokens = antiforgery.GetAndStoreTokens(context);
+                    context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, new CookieOptions { HttpOnly = false, Secure = false });
+                return next(context);
+            });
 
             app.UseMvc(routes =>
             {
