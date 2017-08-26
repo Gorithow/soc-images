@@ -1,10 +1,8 @@
 ﻿import { Component, OnInit } from "@angular/core"
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Observable";
-import { HttpParams } from "@angular/common/http";
 import { PageEvent } from "@angular/material";
 
 import { Image } from "../../image";
+import { ImagesService } from "../../images.service";
 
 @Component({
     selector: "main",
@@ -34,37 +32,23 @@ export class MainComponent implements OnInit {
         }
     }
 
-    constructor(private http: HttpClient) { }
+    constructor(private imagesService: ImagesService) { }
 
     ngOnInit() {
-        this.getImagesCount().subscribe(count => {
+        this.imagesService.getImagesCount().subscribe(count => {
             this.numberOfImages = count;
         });
 
-        this.getImages(this.skip, this.take).subscribe(images => {
+        this.imagesService.getImages(this.skip, this.take, this.imagesUrl).subscribe(images => {
             this.images = images;
         })
-    }
-
-    private getImagesCount(): Observable<number> {
-        return this.http.get<number>("/images/getimagescount");
-    }
-
-    private getImages(skip: number, take: number): Observable<Array<Image>> {
-        let params: HttpParams = new HttpParams().
-            append("skip", skip.toString()).
-            append("take", take.toString());
-
-        return this.http.get<Array<Image>>(this.imagesUrl, {
-            params: params
-        });
     }
 
     private onPage(pageEvent: PageEvent) {
         this.pageIndex = pageEvent.pageIndex;
         this.take = pageEvent.pageSize;
 
-        this.getImages(this.skip, this.take).subscribe(images => {
+        this.imagesService.getImages(this.skip, this.take, this.imagesUrl).subscribe(images => {
             this.images = images;
 
             window.scrollTo(0, 0);

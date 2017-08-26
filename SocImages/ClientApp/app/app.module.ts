@@ -27,6 +27,7 @@ import { LogoutComponent } from "./components/logout/logout.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { ImageComponent } from "./components/image/image.component";
 import { AuthService, AuthGuard } from "./auth.service";
+import { ImagesService } from "./images.service";
 
 const appRoutes: Routes = [
     { path: "", pathMatch: "full", component: MainComponent },
@@ -68,7 +69,8 @@ const appRoutes: Routes = [
     ],
     providers: [
         AuthService,
-        AuthGuard
+        AuthGuard,
+        ImagesService
     ]
 })
 
