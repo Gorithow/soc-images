@@ -34,6 +34,6 @@ export class LoginComponent implements OnInit {
 
     ngOnInit(): void {
         this.authService.logFailured.subscribe((error: any) => this.loginError = error);
-        this.authService.logSuccessed.subscribe(() => this.router.navigate([""]));
+        this.authService.logStatusChanged.subscribe(() => this.router.navigate([""]));
     }
 }

@@ -87,11 +87,20 @@ namespace SocImages.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public IActionResult Test()
+        public async Task<IActionResult> Logout()
         {
-            return Json("OK");
+            await _signInManager.SignOutAsync();
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult IsAuthenticated()
+        {
+            return Ok(User.Identity.IsAuthenticated);
         }
     }
 }

@@ -36,13 +36,11 @@ export class AppRootComponent implements OnInit {
         this.navLinks = this.navLinksEveryone.concat(this.isLoggedIn ? this.navLinksLogged : this.navLinksNotLogged);
     }
 
-    constructor(private authService: AuthService) {
-    }
+    constructor(private authService: AuthService) { }
 
     ngOnInit(): void {
-        this.updateNavLinks();
-
-        this.authService.logSuccessed.subscribe(() => this.updateNavLinks());
+        this.authService.logStatusChanged.subscribe(() => this.updateNavLinks());
+        this.authService.syncWithServer();
     }
 
 }

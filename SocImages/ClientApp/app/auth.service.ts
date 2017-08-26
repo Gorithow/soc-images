@@ -11,8 +11,9 @@ import { HttpParams } from "@angular/common/http";
 @Injectable()
 export class AuthService {
     private _isLoggedIn: boolean = false;
+
     public logFailured: EventEmitter<any> = new EventEmitter();
-    public logSuccessed: EventEmitter<void> = new EventEmitter();
+    public logStatusChanged: EventEmitter<void> = new EventEmitter();
 
     constructor(
         private http: HttpClient,
@@ -31,9 +32,25 @@ export class AuthService {
             subscribe(
             () => {
                 this._isLoggedIn = true;
-                this.logSuccessed.next();
+                this.logStatusChanged.next();
             },
             (error) => this.logFailured.next(error));
+    }
+
+    public logOut(): void {
+        this.http.post<void>("account/logout", {}).
+            subscribe(() => {
+                this._isLoggedIn = false;
+                this.logStatusChanged.next();
+            });
+    }
+
+    public syncWithServer(): void {
+        this.http.get<boolean>("account/isAuthenticated").
+            subscribe(isAuthenticated => {
+                this._isLoggedIn = isAuthenticated;
+                this.logStatusChanged.next();
+            })
     }
 }
 
@@ -43,7 +60,7 @@ export class AuthGuard implements CanActivate {
         private authService: AuthService,
         private router: Router) { }
 
-    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         if (this.authService.isLoggedIn) {
             return true;
         }
