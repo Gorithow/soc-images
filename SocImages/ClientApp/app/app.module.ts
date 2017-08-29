@@ -2,7 +2,7 @@
 import "reflect-metadata";
 
 import { NgModule } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { ServerModule } from "@angular/platform-server";
 import { BrowserModule } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -55,6 +55,7 @@ const appRoutes: Routes = [
     ],
     imports: [
         BrowserModule,
+        FormsModule,
         HttpClientModule,
         HttpModule,
         MdButtonModule,

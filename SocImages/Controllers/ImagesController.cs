@@ -61,7 +61,7 @@ namespace SocImages.Controllers
         [AllowAnonymous]
         public IActionResult ByRate(int skip, int take)
         {
-            var imagesByRateDate = _context.Images.OrderByDescending(i => i.CreatedDate);
+            var imagesByRateDate = _context.Images.OrderByDescending(i => i.Rating);
 
             return Get(imagesByRateDate, skip, take);
         }

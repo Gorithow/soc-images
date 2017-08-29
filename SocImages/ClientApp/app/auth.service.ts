@@ -12,6 +12,8 @@ import { HttpParams } from "@angular/common/http";
 export class AuthService {
     private readonly endpoint: string = "/api/Account";
 
+    private _isLoggedIn: boolean = false;
+
     private get loginEndpoint(): string {
         return this.endpoint + "/Login";
     }
@@ -24,14 +26,12 @@ export class AuthService {
         return this.endpoint + "/IsAuthenticated";
     }
 
-    private _isLoggedIn: boolean = false;
-
-    public logFailured: EventEmitter<any> = new EventEmitter();
-    public logStatusChanged: EventEmitter<void> = new EventEmitter();
-
     constructor(
         private http: HttpClient,
         private router: Router) { }
+
+    public logFailured: EventEmitter<any> = new EventEmitter();
+    public logStatusChanged: EventEmitter<void> = new EventEmitter();
 
     public get isLoggedIn(): boolean {
         return this._isLoggedIn;
