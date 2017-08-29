@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SocImages.Controllers
 {
     [Produces("application/json")]
+    [Route("api/Images")]
     public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,9 +25,9 @@ namespace SocImages.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetImage(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var image = await _context.Images.SingleOrDefaultAsync(m => m.ImageId == id);
 
@@ -38,34 +39,34 @@ namespace SocImages.Controllers
             return File(image.ImageData, _imageContentType);
         }
 
-        [HttpGet]
+        [HttpGet("Count")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetImagesCount()
+        public async Task<IActionResult> Count()
         {
             int imagesCount = await _context.Images.CountAsync();
 
             return Ok(imagesCount);
         }
 
-        [HttpGet]
+        [HttpGet("ByUploadDate")]
         [AllowAnonymous]
-        public IActionResult GetByUploadDate(int skip, int take)
+        public IActionResult ByUploadDate(int skip, int take)
         {
             var imagesByUploadDate = _context.Images.OrderByDescending(i => i.CreatedDate);
 
-            return GetImages(imagesByUploadDate, skip, take);
+            return Get(imagesByUploadDate, skip, take);
         }
 
-        [HttpGet]
+        [HttpGet("ByRate")]
         [AllowAnonymous]
-        public IActionResult GetByRate(int skip, int take)
+        public IActionResult ByRate(int skip, int take)
         {
             var imagesByRateDate = _context.Images.OrderByDescending(i => i.CreatedDate);
 
-            return GetImages(imagesByRateDate, skip, take);
+            return Get(imagesByRateDate, skip, take);
         }
 
-        [HttpPost]
+        [HttpPost("")]
         [Authorize]
         public async Task<IActionResult> PostImage(IFormFile imageFile)
         {
@@ -91,9 +92,21 @@ namespace SocImages.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("{id}/VoteUp")]
         [Authorize]
-        public async Task<IActionResult> VoteForImage(int id, bool voteUp = true)
+        public async Task<IActionResult> VoteUp(int id)
+        {
+            return await Vote(id);
+        }
+
+        [HttpPost("{id}/VoteDown")]
+        [Authorize]
+        public async Task<IActionResult> VoteDown(int id)
+        {
+            return await Vote(id, false);
+        }
+
+        private async Task<IActionResult> Vote(int id, bool voteUp = true)
         {
             var image = await _context.Images.SingleOrDefaultAsync(m => m.ImageId == id);
             if (image == null)
@@ -107,7 +120,7 @@ namespace SocImages.Controllers
             return Ok();
         }
 
-        private IActionResult GetImages(IQueryable<Image> imageQuery, int skip, int take)
+        private IActionResult Get(IQueryable<Image> imageQuery, int skip, int take)
         {
             var images = imageQuery.Skip(skip).Take(take);
 

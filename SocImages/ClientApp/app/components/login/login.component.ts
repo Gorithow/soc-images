@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     }
 
     private onSubmit({ value, valid }: { value: { userName: string, password: string }, valid: string }) {
-        this.authService.logIn(value.userName, value.password);
+        this.authService.login(value.userName, value.password);
     }
 
     ngOnInit(): void {

@@ -11,7 +11,7 @@ import { ImagesService } from "../../images.service";
 
 export class RandomComponent implements OnInit {
     private image: Image;
-    private readonly imagesUrl: string = "/images/getbyuploaddate";
+    private readonly imagesUrl: string = "/Api/Images/ByUploadDate";
 
     constructor(private imagesService: ImagesService) { }
 
@@ -20,9 +20,9 @@ export class RandomComponent implements OnInit {
     }
 
     private randImage(): void {
-        this.imagesService.getImagesCount().subscribe(count => {
+        this.imagesService.count().subscribe(count => {
             this.imagesService.
-                getImages(this.random(count), 1, this.imagesUrl).
+                get(this.random(count), 1, this.imagesUrl).
                 subscribe(images => this.image = images[0]);
         });
     }

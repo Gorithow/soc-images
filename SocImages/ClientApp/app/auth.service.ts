@@ -10,6 +10,20 @@ import { HttpParams } from "@angular/common/http";
 
 @Injectable()
 export class AuthService {
+    private readonly endpoint: string = "/api/Account";
+
+    private get loginEndpoint(): string {
+        return this.endpoint + "/Login";
+    }
+
+    private get logoutEndpoint(): string {
+        return this.endpoint + "/Logout";
+    }
+
+    private get isAuthenticatedEndpoint(): string {
+        return this.endpoint + "/IsAuthenticated";
+    }
+
     private _isLoggedIn: boolean = false;
 
     public logFailured: EventEmitter<any> = new EventEmitter();
@@ -23,12 +37,12 @@ export class AuthService {
         return this._isLoggedIn;
     }
 
-    public logIn(username: string, password: string): void {
+    public login(username: string, password: string): void {
         let params: HttpParams = new HttpParams().
             append("username", username).
             append("password", password);
 
-        this.http.get<void>("account/login", { params: params }).
+        this.http.get<void>(this.loginEndpoint, { params: params }).
             subscribe(
             () => {
                 this._isLoggedIn = true;
@@ -37,8 +51,8 @@ export class AuthService {
             (error) => this.logFailured.next(error));
     }
 
-    public logOut(): void {
-        this.http.post<void>("account/logout", {}).
+    public logout(): void {
+        this.http.post<void>(this.logoutEndpoint, {}).
             subscribe(() => {
                 this._isLoggedIn = false;
                 this.logStatusChanged.next();
@@ -46,7 +60,7 @@ export class AuthService {
     }
 
     public syncWithServer(): void {
-        this.http.get<boolean>("account/isAuthenticated").
+        this.http.get<boolean>(this.isAuthenticatedEndpoint).
             subscribe(isAuthenticated => {
                 this._isLoggedIn = isAuthenticated;
                 this.logStatusChanged.next();

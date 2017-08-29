@@ -11,6 +11,7 @@ using SocImages.Models;
 namespace SocImages.Controllers
 {
     [Produces("application/json")]
+    [Route("api/Account")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -40,7 +41,7 @@ namespace SocImages.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpGet]
+        [HttpGet("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(string userName, string password)
         {
@@ -61,7 +62,7 @@ namespace SocImages.Controllers
             return result.Succeeded ? Ok() : GetErrorResult(result);
         }
 
-        [HttpGet]
+        [HttpGet("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
         {
@@ -84,7 +85,7 @@ namespace SocImages.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("Logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -93,7 +94,7 @@ namespace SocImages.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("IsAuthenticated")]
         [AllowAnonymous]
         public IActionResult IsAuthenticated()
         {

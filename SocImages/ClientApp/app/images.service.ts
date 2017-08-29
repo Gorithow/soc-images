@@ -5,13 +5,23 @@ import { Image } from "./image";
 
 @Injectable()
 export class ImagesService {
-    constructor(private http: HttpClient) { }
+    private readonly endpoint: string = "/api/Images";
 
-    public getImagesCount(): Observable<number> {
-        return this.http.get<number>("/images/getimagescount");
+    private get countEndpoint(): string {
+        return this.endpoint + "/Count";
     }
 
-    public getImages(skip: number, take: number, url: string): Observable<Array<Image>> {
+    private getVoteEndpoint(imageId: number, value: 1 | -1): string {
+        return `${this.endpoint}/${imageId}/${value === 1 ? "VoteUp" : "VoteDown"}`;
+    }
+
+    constructor(private http: HttpClient) { }
+
+    public count(): Observable<number> {
+        return this.http.get<number>(this.countEndpoint);
+    }
+
+    public get(skip: number, take: number, url: string): Observable<Array<Image>> {
         let params: HttpParams = new HttpParams().
             append("skip", skip.toString()).
             append("take", take.toString());
@@ -19,5 +29,9 @@ export class ImagesService {
         return this.http.get<Array<Image>>(url, {
             params: params
         });
+    }
+
+    public vote(imageId: number, value: 1 | -1): Observable<void> {
+        return this.http.post<void>(this.getVoteEndpoint(imageId, value), {});
     }
 }

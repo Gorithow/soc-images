@@ -21,25 +21,25 @@ export class MainComponent implements OnInit {
     private images: Array<Image>;
 
     private get imagesUrl(): string {
-        let imagesEndpoint: string = "/images/";
+        let imagesEndpoint: string = "/api/Images/";
 
         switch (this.selectedSort) {
             case undefined:
             case SortBy.Rate:
-                return imagesEndpoint + "getbyuploaddate";
+                return imagesEndpoint + "ByUploadDate";
             case SortBy.UploadDate:
-                return imagesEndpoint + "getbyrate";
+                return imagesEndpoint + "ByRate";
         }
     }
 
     constructor(private imagesService: ImagesService) { }
 
     ngOnInit() {
-        this.imagesService.getImagesCount().subscribe(count => {
+        this.imagesService.count().subscribe(count => {
             this.numberOfImages = count;
         });
 
-        this.imagesService.getImages(this.skip, this.take, this.imagesUrl).subscribe(images => {
+        this.imagesService.get(this.skip, this.take, this.imagesUrl).subscribe(images => {
             this.images = images;
         })
     }
@@ -48,7 +48,7 @@ export class MainComponent implements OnInit {
         this.pageIndex = pageEvent.pageIndex;
         this.take = pageEvent.pageSize;
 
-        this.imagesService.getImages(this.skip, this.take, this.imagesUrl).subscribe(images => {
+        this.imagesService.get(this.skip, this.take, this.imagesUrl).subscribe(images => {
             this.images = images;
 
             window.scrollTo(0, 0);
