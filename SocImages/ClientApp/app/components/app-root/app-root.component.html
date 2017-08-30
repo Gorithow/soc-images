@@ -1,6 +1,17 @@
 ﻿<img [src]="logoUrl" height="100" />
 <nav md-tab-nav-bar>
-    <a md-tab-link [routerLink]="link.path" *ngFor="let link of navLinks">
+    <a md-tab-link [routerLink]="mainLink.path"
+       routerLinkActive
+       #rla="routerLinkActive"
+       [active]="rla.isActive"
+       [routerLinkActiveOptions]="{ exact: true }">
+        {{ mainLink.label }}
+    </a>
+    <a md-tab-link [routerLink]="link.path" 
+       *ngFor="let link of navLinks" 
+       routerLinkActive 
+       #rla="routerLinkActive"
+       [active]="rla.isActive">
         {{ link.label }}
     </a>
 </nav>

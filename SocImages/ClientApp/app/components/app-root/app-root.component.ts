@@ -12,9 +12,9 @@ export class AppRootComponent implements OnInit {
     private readonly logoUrl: string = "/logo.svg";
 
     private navLinks: Array<NavLink> = [];
+    private readonly mainLink: NavLink = { path: "", label: "Main" };
 
     private readonly navLinksEveryone: Array<NavLink> = [
-        { path: "", label: "Main" },
         { path: "random", label: "Random" }
     ]
 
