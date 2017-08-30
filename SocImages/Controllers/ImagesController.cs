@@ -10,6 +10,7 @@ using SocImages.Models;
 using System.IO;
 using SocImages.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using SocImages.Helpers;
 
 namespace SocImages.Controllers
 {
@@ -18,6 +19,8 @@ namespace SocImages.Controllers
     public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;
+
+        private const int maximumImageSize = 1024 * 100; //100kB
         private const string _imageContentType = "image/jpg";
 
         public ImagesController(ApplicationDbContext context)
@@ -66,10 +69,27 @@ namespace SocImages.Controllers
             return Get(imagesByRateDate, skip, take);
         }
 
-        [HttpPost("")]
+        [HttpPost("{title}")]
         [Authorize]
-        public async Task<IActionResult> PostImage(IFormFile imageFile)
+        public async Task<IActionResult> PostImage([FromRoute] string title, IFormFile imageFile, string captchaResponse)
         {
+            await CaptchaResponseWrapper.ValidateRecaptcha(captchaResponse, ModelState);
+
+            if (imageFile.Length > maximumImageSize)
+            {
+                ModelState.AddModelError("", String.Format("The uploaded image exceeds maximum size of {0}kB.", maximumImageSize / 1024));
+            }
+
+            if (!IsJpgFile(imageFile))
+            {
+                ModelState.AddModelError("", "Couldn't proccess uploaded file. Please upload a valid JPG file.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             using (Stream stream = imageFile.OpenReadStream())
             {
                 using (var binaryReader = new BinaryReader(stream))
@@ -78,7 +98,7 @@ namespace SocImages.Controllers
 
                     var newImage = new Image
                     {
-                        Title = imageFile.FileName,
+                        Title = title,
                         ImageData = fileContent,
                         OwnerId = this.User.GetUserId()
                     };
@@ -125,6 +145,26 @@ namespace SocImages.Controllers
             var images = imageQuery.Skip(skip).Take(take);
 
             return Ok(images);
+        }
+
+        private bool IsJpgFile(IFormFile file)
+        {
+            if (!Path.GetExtension(file.FileName).Equals(".jpg", StringComparison.InvariantCultureIgnoreCase) &&
+                 !Path.GetExtension(file.FileName).Equals(".jpeg", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return false;
+            }
+
+            using (Stream stream = file.OpenReadStream())
+            {
+                using (var binaryReader = new BinaryReader(stream))
+                {
+                    UInt16 soi = binaryReader.ReadUInt16();  // Start of Image (SOI) marker (FFD8)
+                    UInt16 marker = binaryReader.ReadUInt16(); // JFIF marker (FFE0) or EXIF marker(FF01)
+
+                    return soi == 0xd8ff && (marker & 0xe0ff) == 0xe0ff;
+                }
+            }
         }
     }
 }

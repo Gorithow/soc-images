@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
+using SocImages.Helpers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -69,4 +66,11 @@ namespace SocImages.Helpers
 public class CaptchaResponseWrapper
 {
     public string CaptchaResponse { get; set; }
+
+    public static async Task ValidateRecaptcha(string captchaResponse, ModelStateDictionary modelState)
+    {
+        var captcha = new CaptchaResponseWrapper() { CaptchaResponse = captchaResponse };
+
+        await captcha.ValidateRecaptcha(modelState);
+    }
 }

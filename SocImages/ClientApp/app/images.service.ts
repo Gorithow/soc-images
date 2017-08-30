@@ -11,6 +11,10 @@ export class ImagesService {
         return this.endpoint + "/Count";
     }
 
+    private get uploadEndpoint(): string {
+        return this.endpoint;
+    }
+
     private getVoteEndpoint(imageId: number, value: 1 | -1): string {
         return `${this.endpoint}/${imageId}/${value === 1 ? "VoteUp" : "VoteDown"}`;
     }
@@ -33,5 +37,14 @@ export class ImagesService {
 
     public vote(imageId: number, value: 1 | -1): Observable<void> {
         return this.http.post<void>(this.getVoteEndpoint(imageId, value), {});
+    }
+
+    public upload(imageFile: File, title: string, captchaResponse: string): Observable<void> {
+        let input = new FormData();
+        input.append("imageFile", imageFile);
+        input.append("captchaResponse", captchaResponse);
+
+        return this.http
+            .post<void>(this.uploadEndpoint + "/" + title, input);
     }
 }

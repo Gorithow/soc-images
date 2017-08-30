@@ -1,3 +1,22 @@
-﻿<input #fileInput type="file" />
-<button (click)="addFile()">Upload</button>
-<captcha></captcha>
+﻿<form novalidate (ngSubmit)="onSubmit(uploadForm)" class="upload-form" [formGroup]="uploadForm">
+    <div>
+        <md-input-container>
+            <input mdInput placeholder="Title" type="text" formControlName="title">
+        </md-input-container>
+    </div>
+    <div>
+        <button md-raised-button type="button" *ngIf="!uploadedFileName" color="primary" (click)="selectFile()">Choose Image...</button>
+        <button md-button type="button" *ngIf="uploadedFileName" color="primary" (click)="selectFile()">{{ uploadedFileName }}</button>
+        <input #fileInput type="file" (change)="fileSelected()" hidden/>
+        <input type="hidden" name="fileHidden" formControlName="file" />
+    </div>
+    <div>
+        <captcha (resolved)="captchaResolved($event)"></captcha>
+    </div>
+    <md-error *ngFor="let message of errorMessages">
+        {{ message }}
+    </md-error>
+    <div>
+        <button md-raised-button type="submit" [disabled]="uploadForm.invalid" color="primary">Upload</button>
+    </div>
+</form>

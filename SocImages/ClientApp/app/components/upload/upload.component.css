@@ -1,0 +1,15 @@
+﻿.upload-form {
+    margin: auto;
+    text-align: center;
+    margin-top: 5px;
+}
+
+captcha {
+    display: inline-block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+md-error {
+    margin-bottom: 4px;
+}
