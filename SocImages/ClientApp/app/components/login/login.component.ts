@@ -2,6 +2,7 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthService } from "../../auth.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     selector: "login",
@@ -10,7 +11,7 @@ import { AuthService } from "../../auth.service";
 })
 
 export class LoginComponent implements OnInit {
-    private loginError: any;
+    private loginError: HttpErrorResponse;
 
     private loginForm: FormGroup;
 
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.authService.logFailured.subscribe((error: any) => this.loginError = error);
+        this.authService.logFailured.subscribe((error: HttpErrorResponse) => this.loginError = error);
         this.authService.logStatusChanged.subscribe(() => this.router.navigate([""]));
     }
 }

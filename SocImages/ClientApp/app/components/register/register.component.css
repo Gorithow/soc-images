@@ -1,0 +1,13 @@
+﻿.register-form {
+    margin: auto;
+    text-align: center;
+    margin-top: 5px;
+}
+
+captcha {
+    display: inline-block;
+}
+
+md-error {
+    margin-bottom: 4px;
+}

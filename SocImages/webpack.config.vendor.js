@@ -46,6 +46,7 @@ module.exports = {
             '@angular/platform-server',
             'core-js/es6',
             'core-js/es7/reflect',
+            'ng-recaptcha',
             'zone.js',
         ]
     },

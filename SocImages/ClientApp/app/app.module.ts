@@ -17,6 +17,8 @@ import {
 import { RouterModule, Routes } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 
+import { RecaptchaModule } from "ng-recaptcha";
+
 import { AppRootComponent } from "./components/app-root/app-root.component";
 import { MainComponent } from "./components/main/main.component";
 import { RandomComponent } from "./components/random/random.component";
@@ -28,6 +30,7 @@ import { PageNotFoundComponent } from "./components/page-not-found/page-not-foun
 import { ImageComponent } from "./components/image/image.component";
 import { AuthService, AuthGuard } from "./auth.service";
 import { ImagesService } from "./images.service";
+import { CaptchaComponent } from "./components/captcha/captcha.component";
 
 const appRoutes: Routes = [
     { path: "", pathMatch: "full", component: MainComponent },
@@ -51,7 +54,8 @@ const appRoutes: Routes = [
         PageNotFoundComponent,
         RandomComponent,
         RegisterComponent,
-        UploadComponent
+        UploadComponent,
+        CaptchaComponent
     ],
     imports: [
         BrowserModule,
@@ -66,6 +70,7 @@ const appRoutes: Routes = [
         MdTabsModule,
         NoopAnimationsModule,
         ReactiveFormsModule,
+        RecaptchaModule.forRoot(),
         RouterModule.forRoot(appRoutes)
     ],
     providers: [

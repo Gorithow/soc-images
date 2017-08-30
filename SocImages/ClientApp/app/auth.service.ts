@@ -7,12 +7,17 @@ import {
 } from '@angular/router';
 import { HttpClient } from "@angular/common/http";
 import { HttpParams } from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable()
 export class AuthService {
     private readonly endpoint: string = "/api/Account";
 
     private _isLoggedIn: boolean = false;
+
+    private get registerEndpoint(): string {
+        return this.endpoint + "/Register";
+    }
 
     private get loginEndpoint(): string {
         return this.endpoint + "/Login";
@@ -30,11 +35,24 @@ export class AuthService {
         private http: HttpClient,
         private router: Router) { }
 
-    public logFailured: EventEmitter<any> = new EventEmitter();
+    public logFailured: EventEmitter<HttpErrorResponse> = new EventEmitter();
     public logStatusChanged: EventEmitter<void> = new EventEmitter();
+    public registerFailured: EventEmitter<HttpErrorResponse> = new EventEmitter();
+    public registerSuccessed: EventEmitter<void> = new EventEmitter();
 
     public get isLoggedIn(): boolean {
         return this._isLoggedIn;
+    }
+
+    public register(username: string, password: string): void {
+        let params: HttpParams = new HttpParams().
+            append("username", username).
+            append("password", password);
+
+        this.http.get(this.registerEndpoint, { params: params }).
+            subscribe(
+            () => this.registerSuccessed.next(),
+            (error) => this.registerFailured.next(error));
     }
 
     public login(username: string, password: string): void {
@@ -48,7 +66,7 @@ export class AuthService {
                 this._isLoggedIn = true;
                 this.logStatusChanged.next();
             },
-            (error) => this.logFailured.next(error));
+            (error: HttpErrorResponse) => this.logFailured.next(error));
     }
 
     public logout(): void {
