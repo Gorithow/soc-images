@@ -44,12 +44,14 @@ export class AuthService {
         return this._isLoggedIn;
     }
 
-    public register(username: string, password: string): void {
+    public register(username: string, password: string, captchaResponse: string): void {
         let params: HttpParams = new HttpParams().
             append("username", username).
             append("password", password);
 
-        this.http.get(this.registerEndpoint, { params: params }).
+        this.http.post(this.registerEndpoint, {
+            captchaResponse: captchaResponse
+        }, { params: params }).
             subscribe(
             () => this.registerSuccessed.next(),
             (error) => this.registerFailured.next(error));

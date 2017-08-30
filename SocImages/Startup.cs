@@ -64,7 +64,7 @@ namespace SocImages
                 options.Lockout.MaxFailedAccessAttempts = 10;
 
                 // User settings
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
             });
 
             services.ConfigureApplicationCookie(options =>

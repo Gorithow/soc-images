@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using SocImages.Models;
+using SocImages.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace SocImages.Controllers
 {
@@ -41,10 +43,18 @@ namespace SocImages.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpGet("Register")]
+        [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(string userName, string password)
+        public async Task<IActionResult> Register(
+            string userName, string password, [FromBody] CaptchaResponseWrapper captchaResponse)
         {
+            await captchaResponse.ValidateRecaptcha(ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             if (userName == null || password == null)
             {
                 return BadRequest();
