@@ -40,6 +40,8 @@ namespace SocImages.Models
         [DefaultValue(0)]
         public int Rating { get; set; }
 
+        public ICollection<ImageVote> ImageVotes { get; set; }
+
         private DateTime? _createdDate;
     }
 }

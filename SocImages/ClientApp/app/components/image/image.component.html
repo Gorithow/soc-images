@@ -4,8 +4,12 @@
     </md-card-header>
     <img src="{{url}}" />
     <md-card-actions>
-        <button md-button (click)="vote(1)" color="primary">VOTE UP</button>
-        <button md-button (click)="vote(-1)" color="primary">VOTE DOWN</button>
+        <button md-button (click)="vote(1)" *ngIf="!voted" color="primary">VOTE UP</button>
+        <button md-button *ngIf="votedUp" color="accent">VOTE UP</button>
+        <button md-button *ngIf="votedDown" disable>VOTE UP</button>
+        <button md-button (click)="vote(-1)" *ngIf="!voted" color="primary">VOTE DOWN</button>
+        <button md-button *ngIf="votedDown" color="accent">VOTE DOWN</button>
+        <button md-button *ngIf="votedUp" disable>VOTE DOWN</button>
         {{ image.rating }}
     </md-card-actions>
 </md-card>

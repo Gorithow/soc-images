@@ -128,13 +128,21 @@ namespace SocImages.Controllers
 
         private async Task<IActionResult> Vote(int id, bool voteUp = true)
         {
-            var image = await _context.Images.SingleOrDefaultAsync(m => m.ImageId == id);
+            var image = await _context.Images.Include(i => i.ImageVotes).SingleOrDefaultAsync(i => i.ImageId == id);
             if (image == null)
             {
                 return NotFound();
             }
 
+            var userId = User.GetUserId();
+            if (image.ImageVotes.Any(v => v.UserId.Equals(userId)))
+            {
+                return Ok();
+            }
+
             image.Rating += (voteUp ? 1 : -1);
+            image.ImageVotes.Add(new ImageVote { Image = image, UserId = User.GetUserId() });
+
             await _context.SaveChangesAsync();
 
             return Ok();

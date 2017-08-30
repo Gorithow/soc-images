@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { Image } from "./image";
 
+import "rxjs/add/operator/map";
+
 @Injectable()
 export class ImagesService {
     private readonly endpoint: string = "/api/Images";
@@ -32,7 +34,11 @@ export class ImagesService {
 
         return this.http.get<Array<Image>>(url, {
             params: params
-        });
+        }).map(images =>
+            images.map(image => {
+                image.userVote = 0;
+                return image;
+            }));
     }
 
     public vote(imageId: number, value: 1 | -1): Observable<void> {
