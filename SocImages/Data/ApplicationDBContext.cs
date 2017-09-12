@@ -16,16 +16,6 @@ namespace SocImages.Data
 
             builder.Entity<ImageVote>().
                 HasKey(iv => new { iv.ImageId, iv.UserId });
-
-            builder.Entity<ImageVote>().
-                HasOne(iv => iv.Image).
-                WithMany(i => i.ImageVotes).
-                HasForeignKey(iv => iv.ImageId);
-
-            builder.Entity<ImageVote>().
-                HasOne(iv => iv.User).
-                WithMany(u => u.ImageVotes).
-                HasForeignKey(iv => iv.UserId);
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

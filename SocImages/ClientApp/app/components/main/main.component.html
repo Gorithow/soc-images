@@ -1,14 +1,16 @@
-﻿<md-select [(ngModel)]="selectedSort" (change)="onSelect()" placeholder="Sort By">
-    <md-option *ngFor="let option of sortOptions" [value]="option.value">
-        {{ option.label }}
-    </md-option>
-</md-select>
-<md-paginator [length]="numberOfImages"
-              [pageSize]="take"
-              [pageSizeOptions]="[5, 10, 15, 20]"
-              [pageIndex]="pageIndex"
-              (page)="onPage($event)">
-</md-paginator>
+﻿<div>
+    <md-select [(ngModel)]="selectedSort" (change)="onSelect()" placeholder="Sort By">
+        <md-option *ngFor="let option of sortOptions" [value]="option.value">
+            {{ option.label }}
+        </md-option>
+    </md-select>
+    <md-paginator [length]="numberOfImages"
+                  [pageSize]="take"
+                  [pageSizeOptions]="[5, 10, 15, 20]"
+                  [pageIndex]="pageIndex"
+                  (page)="onPage($event)">
+    </md-paginator>
+</div>
 <image *ngFor="let image of images" [image]="image"></image>
 <md-paginator [length]="numberOfImages"
               [pageSize]="take"

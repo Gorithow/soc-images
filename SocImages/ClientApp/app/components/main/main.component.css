@@ -1,4 +1,14 @@
 ﻿md-select {
-    float: left;
-    padding: 2em;
+    margin-top: 1em;
+    padding: 1em;
+}
+
+md-paginator {
+    margin-left: auto;
+}
+
+div {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
 }
