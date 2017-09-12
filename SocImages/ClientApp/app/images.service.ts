@@ -13,6 +13,10 @@ export class ImagesService {
         return this.endpoint + "/Count";
     }
 
+    private get notApprovedCountEndpoint(): string {
+        return this.endpoint + "/NotApprovedCount";
+    }
+
     private get uploadEndpoint(): string {
         return this.endpoint;
     }
@@ -25,6 +29,10 @@ export class ImagesService {
 
     public count(): Observable<number> {
         return this.http.get<number>(this.countEndpoint);
+    }
+
+    public notApprovedCount(): Observable<number> {
+        return this.http.get<number>(this.notApprovedCountEndpoint);
     }
 
     public get(skip: number, take: number, url: string): Observable<Array<Image>> {

@@ -1,0 +1,13 @@
+﻿<md-paginator [length]="numberOfImages"
+                [pageSize]="take"
+                [pageSizeOptions]="[5, 10, 15, 20]"
+                [pageIndex]="pageIndex"
+                (page)="onPage($event)">
+</md-paginator>
+<image *ngFor="let image of images" [image]="image"></image>
+<md-paginator [length]="numberOfImages"
+              [pageSize]="take"
+              [pageSizeOptions]="[5, 10, 15, 20]"
+              [pageIndex]="pageIndex"
+              (page)="onPage($event)">
+</md-paginator>

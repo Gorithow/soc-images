@@ -46,7 +46,16 @@ namespace SocImages.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Count()
         {
-            int imagesCount = await _context.Images.CountAsync();
+            int imagesCount = await _context.Images.Where(i => i.Approved).CountAsync();
+
+            return Ok(imagesCount);
+        }
+
+        [HttpGet("NotApprovedCount")]
+        [AllowAnonymous]
+        public async Task<IActionResult> NotApprovedCount()
+        {
+            int imagesCount = await _context.Images.Where(i => !i.Approved).CountAsync();
 
             return Ok(imagesCount);
         }
@@ -55,7 +64,7 @@ namespace SocImages.Controllers
         [AllowAnonymous]
         public IActionResult ByUploadDate(int skip, int take)
         {
-            var imagesByUploadDate = _context.Images.OrderByDescending(i => i.CreatedDate);
+            var imagesByUploadDate = _context.Images.Where(i => i.Approved).OrderByDescending(i => i.CreatedDate);
 
             return Get(imagesByUploadDate, skip, take);
         }
@@ -64,9 +73,17 @@ namespace SocImages.Controllers
         [AllowAnonymous]
         public IActionResult ByRate(int skip, int take)
         {
-            var imagesByRateDate = _context.Images.OrderByDescending(i => i.Rating);
+            var imagesByRateDate = _context.Images.Where(i => i.Approved).OrderByDescending(i => i.Rating);
 
             return Get(imagesByRateDate, skip, take);
+        }
+
+        [HttpGet("NotApproved")]
+        public IActionResult NotApproved(int skip, int take)
+        {
+            var notApprovedImages = _context.Images.Where(i => !i.Approved).OrderByDescending(i => i.CreatedDate);
+
+            return Get(notApprovedImages, skip, take);
         }
 
         [HttpPost("{title}")]

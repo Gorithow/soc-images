@@ -5,4 +5,5 @@
 
 .mat-tab-links .mat-tab-link {
     display: table-cell;
+    vertical-align: middle;
 }

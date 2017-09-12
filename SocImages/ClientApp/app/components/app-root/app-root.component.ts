@@ -15,6 +15,7 @@ export class AppRootComponent implements OnInit {
     private readonly mainLink: NavLink = { path: "", label: "Main" };
 
     private readonly navLinksEveryone: Array<NavLink> = [
+        { path: "not-approved", label: "Not approved"},
         { path: "random", label: "Random" }
     ]
 

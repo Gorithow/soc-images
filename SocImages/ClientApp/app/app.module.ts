@@ -31,9 +31,11 @@ import { ImageComponent } from "./components/image/image.component";
 import { AuthService, AuthGuard } from "./auth.service";
 import { ImagesService } from "./images.service";
 import { CaptchaComponent } from "./components/captcha/captcha.component";
+import { NotApprovedComponent } from "./components/not-approved/not-approved.component";
 
 const appRoutes: Routes = [
     { path: "", pathMatch: "full", component: MainComponent },
+    { path: "not-approved", component: NotApprovedComponent },
     { path: "random", component: RandomComponent },
     { path: "upload", component: UploadComponent, canActivate: [AuthGuard] },
     { path: "login", component: LoginComponent },
@@ -51,6 +53,7 @@ const appRoutes: Routes = [
         LoginComponent,
         LogoutComponent,
         MainComponent,
+        NotApprovedComponent,
         PageNotFoundComponent,
         RandomComponent,
         RegisterComponent,
