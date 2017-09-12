@@ -21,6 +21,10 @@ export class ImagesService {
         return this.endpoint;
     }
 
+    private getSingleEndpoint(imageId: number): string {
+        return `${this.endpoint}/${imageId}/Data`;
+    }
+
     private getVoteEndpoint(imageId: number, value: 1 | -1): string {
         return `${this.endpoint}/${imageId}/${value === 1 ? "VoteUp" : "VoteDown"}`;
     }
@@ -47,6 +51,15 @@ export class ImagesService {
                 image.userVote = 0;
                 return image;
             }));
+    }
+
+    public getSingle(imageId: number): Observable<Image> {
+        let url: string = this.getSingleEndpoint(imageId);
+
+        return this.http.get<Image>(url).map(image => {
+            image.userVote = 0;
+            return image;
+        });
     }
 
     public vote(imageId: number, value: 1 | -1): Observable<void> {

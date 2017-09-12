@@ -42,6 +42,20 @@ namespace SocImages.Controllers
             return File(image.ImageData, _imageContentType);
         }
 
+        [HttpGet("{id}/Data")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Single(int id)
+        {
+            var image = await _context.Images.SingleOrDefaultAsync(m => m.ImageId == id);
+
+            if (image == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(image);
+        }
+
         [HttpGet("Count")]
         [AllowAnonymous]
         public async Task<IActionResult> Count()
